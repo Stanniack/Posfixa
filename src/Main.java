@@ -13,7 +13,7 @@ public class Main {
     public static void main(String[] args) {
 // TODO code application logic here
         Stack<Character> pilhaOperadores = new Stack<>();
-        String equacao = "(a-b)*c";
+        String equacao = "A/B*C+D*E-A*C";
         StringBuilder resultado = new StringBuilder();
         boolean parenteses = false;
 
@@ -39,7 +39,7 @@ public class Main {
                 // Senão, é operador
             } else {
                 // Se a pilha estiver vazia
-                if (pilhaOperadores.isEmpty() && (equacao.charAt(i) != '(' || equacao.charAt(i) != ')')) {
+                if (pilhaOperadores.isEmpty() && (equacao.charAt(i) != '(' && equacao.charAt(i) != ')')) {
                     pilhaOperadores.push(equacao.charAt(i));
 
                 } else {
