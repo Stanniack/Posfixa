@@ -13,8 +13,9 @@ public class Main {
     public static void main(String[] args) {
 // TODO code application logic here
         Stack<Character> pilhaOperadores = new Stack<>();
-        String equacao = "1/2*3+4*5-1*3";
+        String equacao = "(a-b)*c";
         StringBuilder resultado = new StringBuilder();
+        boolean parenteses = false;
 
 
         for (int i = 0; i < equacao.length(); i++) {
@@ -28,26 +29,47 @@ public class Main {
 
                 // gambiarra
                 if (pilhaOperadores.size() > 1) {
-                    resultado.append(pilhaOperadores.lastElement());
-                    pilhaOperadores.pop();
+                    if(parenteses == false){
+                        resultado.append(pilhaOperadores.lastElement());
+                        pilhaOperadores.pop();
+                    }
+
                 }
 
                 // Senão, é operador
             } else {
                 // Se a pilha estiver vazia
-                if (pilhaOperadores.isEmpty()) {
+                if (pilhaOperadores.isEmpty() && (equacao.charAt(i) != '(' || equacao.charAt(i) != ')')) {
                     pilhaOperadores.push(equacao.charAt(i));
 
                 } else {
                     // Lógica da prioridade
-                    if (prioridade(pilhaOperadores.lastElement()) == prioridade(equacao.charAt(i))
+
+                    if(equacao.charAt(i) == '('){
+                        parenteses = true;
+
+                    }else if (equacao.charAt(i) == ')') {
+                        while(!pilhaOperadores.isEmpty()){
+                            resultado.append(pilhaOperadores.lastElement());
+                            pilhaOperadores.pop();
+                        }
+
+                        parenteses = false;
+
+
+                    }else if (prioridade(pilhaOperadores.lastElement()) == prioridade(equacao.charAt(i))
                             || prioridade(pilhaOperadores.lastElement()) > prioridade(equacao.charAt(i))) {
 
-                        resultado.append(pilhaOperadores.lastElement());
-                        pilhaOperadores.pop();
-                        pilhaOperadores.push(equacao.charAt(i));
+                        if (parenteses == false) {
+                            resultado.append(pilhaOperadores.lastElement());
+                            pilhaOperadores.pop();
+                            pilhaOperadores.push(equacao.charAt(i));
+                        } else {
+                            pilhaOperadores.push(equacao.charAt(i));
+                        }
 
-                    } else if (prioridade(pilhaOperadores.lastElement()) < prioridade(equacao.charAt(i))) {
+                    }else if (prioridade(pilhaOperadores.lastElement()) < prioridade(equacao.charAt(i))) {
+                        // tratar isso daqui, pode estar errado
                         pilhaOperadores.push(equacao.charAt(i));
                     }
 
@@ -62,6 +84,7 @@ public class Main {
         }
 
         System.out.println(resultado);
+        System.out.println(pilhaOperadores);
     }
 
 
