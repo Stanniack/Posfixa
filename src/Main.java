@@ -13,7 +13,7 @@ public class Main {
     public static void main(String[] args) {
 // TODO code application logic here
         Stack<Character> pilhaOperadores = new Stack<>();
-        String equacao = "A/B*C+D*E-A*C";
+        String equacao = "(2+4*3+(2/4))";
         StringBuilder resultado = new StringBuilder();
         boolean parenteses = false;
 
@@ -47,26 +47,27 @@ public class Main {
 
                     if(equacao.charAt(i) == '('){
                         parenteses = true;
+                        pilhaOperadores.push(equacao.charAt(i));
 
                     }else if (equacao.charAt(i) == ')') {
-                        while(!pilhaOperadores.isEmpty()){
+                        while (!pilhaOperadores.lastElement().equals('(')) {
                             resultado.append(pilhaOperadores.lastElement());
                             pilhaOperadores.pop();
                         }
 
+                        pilhaOperadores.pop();
                         parenteses = false;
 
+                    // Se o topo de pilha for um '(', apenas empilhe o operador encontrado
+                    }else if (pilhaOperadores.lastElement().equals('(')){
+                        pilhaOperadores.push(equacao.charAt(i));
 
                     }else if (prioridade(pilhaOperadores.lastElement()) == prioridade(equacao.charAt(i))
                             || prioridade(pilhaOperadores.lastElement()) > prioridade(equacao.charAt(i))) {
 
-                        if (parenteses == false) {
-                            resultado.append(pilhaOperadores.lastElement());
-                            pilhaOperadores.pop();
-                            pilhaOperadores.push(equacao.charAt(i));
-                        } else {
-                            pilhaOperadores.push(equacao.charAt(i));
-                        }
+                        resultado.append(pilhaOperadores.lastElement());
+                        pilhaOperadores.pop();
+                        pilhaOperadores.push(equacao.charAt(i));
 
                     }else if (prioridade(pilhaOperadores.lastElement()) < prioridade(equacao.charAt(i))) {
                         // tratar isso daqui, pode estar errado
@@ -94,6 +95,8 @@ public class Main {
         if (c.equals('+') || c.equals('-')) {
             prioridade = 1;
         } else if (c.equals('*') || c.equals('/')) {
+            prioridade = 2;
+        }else if (c.equals('^')) {
             prioridade = 2;
         }
 
